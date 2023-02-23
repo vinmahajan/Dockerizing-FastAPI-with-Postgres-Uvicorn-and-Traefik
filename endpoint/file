@@ -1,0 +1,27 @@
+import pandas as pd
+import gzip
+from flask import Flask, request, make_response
+
+app = Flask(_name_)
+
+@app.route('/csv', methods=['POST'])
+def csv():
+    # Parse the request data as a Pandas DataFrame
+    df = pd.read_json(request.data)
+    
+    # Convert the DataFrame to a gzipped CSV string
+    csv_str = df.to_csv(index=False).encode('utf-8')
+    gz_str = gzip.compress(csv_str)
+    
+    # Set up the response headers
+    response = make_response(gz_str)
+    response.headers['Content-Encoding'] = 'gzip'
+    response.headers['Content-Disposition'] = 'attachment; filename=data.csv.gz'
+    response.headers['Content-Type'] = 'text/csv'
+    
+    return response
+
+if _name_ == '_main_':
+    app.run(debug=True)
+
+

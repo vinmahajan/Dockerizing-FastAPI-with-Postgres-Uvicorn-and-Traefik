@@ -1,0 +1,18 @@
+import pytest
+import gzip
+
+def test_csv_gz_response():
+    # Read the contents of the dummy CSV file
+    with open('test_data.csv', 'rb') as file:
+        data = file.read()
+
+    # Send the dummy file to the function under test
+    response = function_under_test(data)
+
+    # Check if the response is a .csv.gz file
+    assert response.endswith('.csv.gz')
+
+    # Check if the contents of the response are valid gzip-compressed CSV data
+    with gzip.open(response, 'rb') as gz_file:
+        csv_data = gz_file.read().decode('utf-8')
+        assert csv_data == 'Name, Age, Gender\nJohn, 28, Male\nMary, 31, Female\n'
